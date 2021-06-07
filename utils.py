@@ -10,7 +10,8 @@ def sample_batch(dset, batch_size, second) :
         dset : musdb dataset
         second : length of sub-clip of songs in second
     """
-    idx = np.random.randint(0, 100, (4, batch_size))
+    l = len(dset)
+    idx = np.random.randint(0, l, (4, batch_size))
     drum = np.zeros((batch_size, 2, 5 * 44100))
     bass = np.zeros((batch_size, 2, 5 * 44100))
     other = np.zeros((batch_size, 2, 5 * 44100))
@@ -57,7 +58,6 @@ def transform(raw, hop_length, n_fft, mono = False) :
         target : concatenation of spectrogram of drums, bass, other, vocals (bs*2 x freq_bin*4 x time_bim)
     """
     channel = 1 if mono else 2
-    x = stft(raw['mix'], n_fft = n_fft, hop_length = hop_length)
     x = np.asarray([stft(raw['mix'][i][j], n_fft=2048, hop_length=1024) for j in range(channel) for i in range(10)])
     drum_stft = np.asarray([stft(raw['drum'][i][j], n_fft = n_fft, hop_length = hop_length) for j in range(channel) for i in range(10)])
     bass_stft = np.asarray([stft(raw['bass'][i][j], n_fft = n_fft, hop_length = hop_length) for j in range(channel) for i in range(10)])
@@ -65,7 +65,7 @@ def transform(raw, hop_length, n_fft, mono = False) :
     vocal_stft = np.asarray([stft(raw['vocal'][i][j], n_fft = n_fft, hop_length = hop_length) for j in range(2) for i in range(10)])
     target = np.concatenate((drum_stft, bass_stft, other_stft, vocal_stft), axis = 1)
     x = np.abs(x)
-    target = np.ans(target)
+    target = np.abs(target)
     return x, target
 
 def gru_params(model) :

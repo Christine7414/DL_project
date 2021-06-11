@@ -2,8 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from scipy import signal
-import musdb
 import matplotlib.pyplot as plt
 class ARC(nn.Module) :
     def __init__(self):
@@ -56,7 +54,7 @@ class Enhancement(nn.Module) :
         self.Bn4 = nn.BatchNorm1d(512)
         self.TConv5 = nn.ConvTranspose1d(512, 1024, 3, 2, output_padding = 1)
         self.Bn5 = nn.BatchNorm1d(1024)
-        self.Conv6 = nn.Conv1d(1024, 4*1025, 3, 1, padding = 2)
+        self.Conv6 = nn.Conv1d(1024, 1025, 3, 1, padding = 2)
         self.CConv1 = nn.Conv1d(1024, 1024, 3, 1, padding = 1)
         self.CBn1 = nn.BatchNorm1d(1024)
         self.CConv2 = nn.Conv1d(512, 512, 3, 1, padding = 1)
